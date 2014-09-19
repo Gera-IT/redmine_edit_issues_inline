@@ -34,7 +34,7 @@
               <% query.inline_columns.each do |column| %>
                   <% if column.css_classes == :subject %>
                      <td class="<%= column.css_classes%>">
-                      <%= best_in_place issue, :subject, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id)%>
+                      <%= best_in_place issue, :subject, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id)%>
                      </td>
                   <% else %>
                       <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>

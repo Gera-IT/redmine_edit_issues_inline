@@ -32,13 +32,24 @@
             <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
               <% query.inline_columns.each do |column| %>
-                  <% if column.css_classes == :subject %>
                      <td class="<%= column.css_classes%>">
-                      <%= best_in_place issue, :subject, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id)%>
+                      <% p '####' %>
+                       <% p column %>
+                       <% proj = issue.project  %>
+                      <% if InlineHelper.define_type(column) == :select %>
+                        <%= best_in_place issue, column.name, :type => :select, :collection => InlineHelper.get_collection(column.name, proj.id),
+                                             :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => proj.id, :need_object_value => true), :simple_value => issue.send(column.name).try(:name)
+                           %>
+                      <% elsif InlineHelper.define_type(column) == nil %>
+                           <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
+                      <% else %>
+                        <%= best_in_place issue, column.name.to_sym, :type => :input,
+                                        :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id) %>
+                      <% end %>
                      </td>
-                  <% else %>
-                      <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
-                  <% end %>
+                  <%# else %>
+                      <%#= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
+                  <%# end %>
               <% end %>
             </tr>
             <% @query.block_columns.each do |column|

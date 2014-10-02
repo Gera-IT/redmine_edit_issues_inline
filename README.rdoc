@@ -1,3 +1,7 @@
 = task_inline_edit
 
-Description goes here
+Run `bundle install`
+
+Run `rake redmine:plugins:assets`
+
+Restart server

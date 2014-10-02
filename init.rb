@@ -1,5 +1,11 @@
 require 'assets_hook'
+require 'redmine'
 
+require_dependency 'issue_patch'
+
+# require_dependency 'issues_inline_helper'
+
+# require_dependency 'inline_helper'
 
 Redmine::Plugin.register :task_inline_edit do
   name 'Task Inline Edit plugin'
@@ -12,6 +18,8 @@ Redmine::Plugin.register :task_inline_edit do
   project_module :inline_edit do
     permission :allow_inline_edit, :issues_inline => :update_inline
   end
+
+
 
 
 end

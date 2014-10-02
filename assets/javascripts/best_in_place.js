@@ -48,13 +48,13 @@ BestInPlaceEditor.prototype = {
                         to_display = this.element.html().replace(/&amp;/gi, '&');
                     }
                     else {
-                        var value = this.element.data('bipValue');
+                        var value = this.element.data('value');
                         if (typeof value === 'undefined') {
                             to_display = '';
                         } else if (typeof value === 'string') {
-                            to_display = this.element.data('bipValue').replace(/&amp;/gi, '&');
+                            to_display = this.element.data('value').replace(/&amp;/gi, '&');
                         } else {
-                            to_display = this.element.data('bipValue');
+                            to_display = this.element.data('value');
                         }
                     }
                     break;
@@ -184,11 +184,12 @@ BestInPlaceEditor.prototype = {
 
         // Load own attributes (overrides all others)
         self.url = self.element.data("url") || self.url || document.location.pathname;
-        self.collection = self.element.data("bipCollection") || self.collection;
-        self.formType = self.element.data("bipType") || "input";
+        self.collection = self.element.data("collection") || self.collection;
+        self.formType = self.element.data("type") || "input";
         self.objectName = self.element.data("object") || self.objectName;
+        self.simpleValue = self.element.data("simple_value");
         self.attributeName = self.element.data("attribute") || self.attributeName;
-        self.activator = self.element.data("bipActivator") || self.element;
+        self.activator = self.element.data("activator") || self.element;
         self.okButton = self.element.data("bipOkButton") || self.okButton;
         self.okButtonClass = self.element.data("bipOkButtonClass") || self.okButtonClass || BestInPlaceEditor.defaults.okButtonClass;
         self.cancelButton = self.element.data("bipCancelButton") || self.cancelButton;
@@ -206,7 +207,7 @@ BestInPlaceEditor.prototype = {
 
         if (self.formType === "select" || self.formType === "checkbox") {
             self.values = self.collection;
-            self.collectionValue = self.element.data("bipValue") || self.collectionValue;
+            self.collectionValue = self.element.data("value") || self.collectionValue;
         }
     },
 

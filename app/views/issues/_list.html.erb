@@ -42,6 +42,8 @@
                            %>
                       <% elsif InlineHelper.define_type(column) == nil %>
                            <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
+                      <% elsif InlineHelper.define_type(column) == :custom_field %>
+                           <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
                       <% else %>
                         <%= best_in_place issue, column.name.to_sym, :type => :input,
                                         :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id) %>

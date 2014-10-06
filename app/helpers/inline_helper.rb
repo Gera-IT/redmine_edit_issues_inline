@@ -6,11 +6,10 @@ module InlineHelper
 
   def self.define_type(column)
     name = column.name
-    case name
-      when :status, :priority, :tracker, :assigned_to, :category, :fixed_version
-        :select
-      else
-        :input
+    if column.name.to_s.include?("cf")
+      :custom_field
+    else
+      [:status, :priority, :tracker, :assigned_to, :category, :fixed_version, :project].include?(name) ? :select : :input
     end
 
   end
@@ -36,8 +35,6 @@ module InlineHelper
   end
 
   def simple_value(issue, column_name)
-
-
   end
 
   def self.allowed_empty_fields(field)
@@ -53,7 +50,8 @@ module InlineHelper
         :tracker => "Tracker",
         :assigned_to => "Member",
         :category => "IssueCategory",
-        :fixed_version => "Version"
+        :fixed_version => "Version",
+        :project => "Project"
     }
 
     return values[value.to_sym] if value && value.respond_to?(:to_sym)

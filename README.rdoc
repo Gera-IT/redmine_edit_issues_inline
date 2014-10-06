@@ -1,5 +1,11 @@
 = task_inline_edit
 
+cd redmine/plugins
+
+Run `git clone https://github.com/Gera-IT/redmine_edit_issues_inline.git`
+
+Run `mv redmine_edit_issues_inline task_inline_edit`
+
 Run `bundle install`
 
 Run `rake redmine:plugins:assets`

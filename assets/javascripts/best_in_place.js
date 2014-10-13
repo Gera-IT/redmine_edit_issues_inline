@@ -146,7 +146,7 @@ BestInPlaceEditor.prototype = {
                 }
         }
 
-        editor.element.data('bipValue', value);
+        editor.element.data('value', value);
 
         editor.element.trigger(jQuery.Event("best_in_place:update"));
 
@@ -187,22 +187,22 @@ BestInPlaceEditor.prototype = {
         self.collection = self.element.data("collection") || self.collection;
         self.formType = self.element.data("type") || "input";
         self.objectName = self.element.data("object") || self.objectName;
-        self.simpleValue = self.element.data("simple_value");
+        self.simpleValue = self.element.data("simple-value");
         self.attributeName = self.element.data("attribute") || self.attributeName;
         self.activator = self.element.data("activator") || self.element;
-        self.okButton = self.element.data("bipOkButton") || self.okButton;
-        self.okButtonClass = self.element.data("bipOkButtonClass") || self.okButtonClass || BestInPlaceEditor.defaults.okButtonClass;
-        self.cancelButton = self.element.data("bipCancelButton") || self.cancelButton;
-        self.cancelButtonClass = self.element.data("bipCancelButtonClass") || self.cancelButtonClass || BestInPlaceEditor.defaults.cancelButtonClass;
-        self.placeHolder = self.element.data("bipPlaceholder") || BestInPlaceEditor.defaults.locales[''].placeHolder;
-        self.inner_class = self.element.data("bipInnerClass");
-        self.html_attrs = self.element.data("bipHtmlAttrs");
-        self.original_content = self.element.data("bipOriginalContent") || self.original_content;
+        self.okButton = self.element.data("ok-button") || self.okButton;
+        self.okButtonClass = self.element.data("ok-button-class") || self.okButtonClass || BestInPlaceEditor.defaults.okButtonClass;
+        self.cancelButton = self.element.data("cancel-button") || self.cancelButton;
+        self.cancelButtonClass = self.element.data("cancel-button_class") || self.cancelButtonClass || BestInPlaceEditor.defaults.cancelButtonClass;
+        self.placeHolder = self.element.data("placeholder") || BestInPlaceEditor.defaults.locales[''].placeHolder;
+        self.inner_class = self.element.data("inner-class");
+        self.html_attrs = self.element.data("html-attrs");
+        self.original_content = self.element.data("original-content") || self.original_content;
 
         // if set the input won't be satinized
         self.display_raw = self.element.data("bip-raw");
 
-        self.useConfirm = self.element.data("bip-confirm");
+        self.useConfirm = self.element.data("confirm");
 
 
         if (self.formType === "select" || self.formType === "checkbox") {
@@ -284,7 +284,7 @@ BestInPlaceEditor.prototype = {
         if (data && data !== "") {
             var response = jQuery.parseJSON(data);
             if (response !== null && response.hasOwnProperty("display_as")) {
-                this.element.data('bip-original-content', this.element.text());
+                this.element.data('original-content', this.element.text());
                 this.element.html(response.display_as);
             }
 

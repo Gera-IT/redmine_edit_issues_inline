@@ -6,26 +6,30 @@ module InlineHelper
 
   def self.define_type(column)
     name = column.name
-    if column.name.to_s.include?("cf")
-      :custom_field
-    else
-      [:status, :priority, :tracker, :assigned_to, :category, :fixed_version, :project].include?(name) ? :select : :input
+    restricted_attributes = [:relations, :created_at, :updated_at, :closed_on, :id]
+    allowed_attributes = [:tracker, :status, :priority, :subject, :assigned_to, :category, :fixed_version, :estimated_hours, :start_date, :due_date, :position, :remaining_hours, :project, :author]
+    return :custom_field if name.to_s.include?("cf_")
+    return :bool if column.name == :is_private
+    return :uneditable_field if restricted_attributes.include?(name)
+    return :uneditable_field unless allowed_attributes.include?(name)
+    if allowed_attributes.include?(name)
+      [:status, :priority, :tracker, :assigned_to, :category, :fixed_version, :project, :author].include?(name) ? :select : :input
     end
 
   end
 
+  def self.read_only_column(column)
+    true if self.define_type(column) == :custom_field || self.define_type(column) == nil
+  end
+
+
   def self.get_collection(column_name, project_id)
     model = self.model_for_replace(column_name)
-    p 'inline_helper.rb:20'
-    p 'MODEL NAME'
-    p model
     if model == "Member"
       collection = self.get_project_users(project_id)
     elsif model == "Version"
       collection = Project.find(project_id).versions
     else
-      p 'inline_helper.rb:26'
-      p 'before_collection'
       collection = model.constantize.all
     end
     collection = collection.each_with_object({}){ |o,h| h[o.try(:id)] = o.try(:name) }
@@ -34,7 +38,26 @@ module InlineHelper
     collection
   end
 
-  def simple_value(issue, column_name)
+  def self.get_custom_field_collection(custom_field)
+    collection = custom_field.possible_values.each_with_object({}){ |o,h| h[o] = o }
+    collection
+  end
+
+  def self.find_custom_value_object(issue, column)
+    column.custom_field.custom_values.find_by_customized_id(issue.id)
+  end
+
+
+  def self.generate_bip_params(issue, column)
+    issue_custom_field = column.custom_field
+    custom_value = issue_custom_field.custom_values.find_by_customized_id(issue.id)
+    if issue_custom_field.field_format == "list"
+      {:type => :select, :collection => InlineHelper.get_custom_field_collection(issue_custom_field),
+          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :need_object_value => true, :type => :custom_field, :custom_field_id => column.custom_field.id), :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id)}
+    else
+      {:type => :input,
+          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id), :inner_class => '', :ok_button => 'Save'}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
+    end
   end
 
   def self.allowed_empty_fields(field)
@@ -51,7 +74,8 @@ module InlineHelper
         :assigned_to => "Member",
         :category => "IssueCategory",
         :fixed_version => "Version",
-        :project => "Project"
+        :project => "Project",
+        :author => "User"
     }
 
     return values[value.to_sym] if value && value.respond_to?(:to_sym)

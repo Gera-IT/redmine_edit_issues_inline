@@ -31,27 +31,37 @@
             <% end %>
             <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
+              <% p query.inline_columns.map(&:name) %>
               <% query.inline_columns.each do |column| %>
-                     <td class="<%= column.css_classes%>">
-                      <% p '####' %>
-                       <% p column %>
-                       <% proj = issue.project  %>
-                      <% if InlineHelper.define_type(column) == :select %>
-                        <%= best_in_place issue, column.name, :type => :select, :collection => InlineHelper.get_collection(column.name, proj.id),
-                                             :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => proj.id, :need_object_value => true), :simple_value => issue.send(column.name).try(:name)
-                           %>
-                      <% elsif InlineHelper.define_type(column) == nil %>
-                           <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
-                      <% elsif InlineHelper.define_type(column) == :custom_field %>
-                           <%= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
-                      <% else %>
-                        <%= best_in_place issue, column.name.to_sym, :type => :input,
-                                        :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id) %>
-                      <% end %>
-                     </td>
-                  <%# else %>
-                      <%#= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
-                  <%# end %>
+                <td class="<%= column.css_classes%>">
+                  <% p column %>
+                  <% proj = issue.project  %>
+                  <% if InlineHelper.define_type(column) == :uneditable_field %>
+                      <%= column_content(column, issue) %>
+                    <%#= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
+                  <% elsif InlineHelper.define_type(column) == :select %>
+                    <%= best_in_place issue, column.name, :type => :select, :collection => InlineHelper.get_collection(column.name, proj.id),
+                                      :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => proj.id, :need_object_value => true), :simple_value => issue.send(column.name).try(:name)
+                    %>
+                  <% elsif InlineHelper.define_type(column) == :bool %>
+                    <%= best_in_place issue, column.name, :type => :checkbox, :collection => ["No", "Yes"],
+                                        :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => proj.id), :simple_value => issue.send(column.name) ? "Yes" : "No", :need_object_value => false%>
+                  <% elsif InlineHelper.define_type(column) == :custom_field %>
+                    <% if InlineHelper.find_custom_value_object(issue, column) %>
+                      <%= best_in_place (InlineHelper.find_custom_value_object(issue, column)), :value, InlineHelper.generate_bip_params(issue, column) %>
+                    <% else %>
+                      <p>No inline edit available</p>
+                    <% end %>
+                           <%#= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
+                  <% elsif [:due_date, :start_date].include?(column.name) %>
+                        <%# if [:due_date, :start_date].include?(column.name) %>
+                      <%= best_in_place issue, column.name.to_sym, :type => :input,
+                                                 :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :inner_class => '', :ok_button => 'Save', :activator => "#issue_#{issue.id}_#{column.name.to_s}" %>
+                      <%= image_tag 'calendar.png', :plugin => 'task_inline_edit', :class => 'ui-datepicker-trigger', :id => "issue_#{issue.id}_#{column.name.to_s}" %>
+                  <% elsif InlineHelper.define_type(column) == :input %>
+                      <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :ok_button => 'Save' %>
+                  <% end %>
+                </td>
               <% end %>
             </tr>
             <% @query.block_columns.each do |column|

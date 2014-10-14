@@ -48,9 +48,9 @@
                                         :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => proj.id), :simple_value => issue.send(column.name) ? "Yes" : "No", :need_object_value => false%>
                   <% elsif InlineHelper.define_type(column) == :custom_field %>
                     <% if InlineHelper.find_custom_value_object(issue, column) %>
-                      <%= best_in_place (InlineHelper.find_custom_value_object(issue, column)), :value, InlineHelper.generate_bip_params(issue, column) %>
+                      <%= best_in_place (InlineHelper.find_custom_value_object(issue, column)), :value, InlineHelper.generate_bip_params(issue, column, true) %>
                     <% else %>
-                      <p>No inline edit available</p>
+                      <%= best_in_place CustomValue.new, :value, InlineHelper.generate_bip_params(issue, column, true) %>
                     <% end %>
                            <%#= raw "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>" %>
                   <% elsif [:due_date, :start_date].include?(column.name) %>
@@ -59,7 +59,12 @@
                                                  :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :inner_class => '', :ok_button => 'Save', :activator => "#issue_#{issue.id}_#{column.name.to_s}" %>
                       <%= image_tag 'calendar.png', :plugin => 'task_inline_edit', :class => 'ui-datepicker-trigger', :id => "issue_#{issue.id}_#{column.name.to_s}" %>
                   <% elsif InlineHelper.define_type(column) == :input %>
-                      <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :ok_button => 'Save' %>
+                      <% if column.name == :subject %>
+                        <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :ok_button => 'Save', :activator => "#issue_#{issue.id}_subject" %>
+                        <%= image_tag 'pencil12.gif', :plugin => 'task_inline_edit', :style => 'float:right;', :id => "issue_#{issue.id}_subject" %>
+                      <% else %>
+                        <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :ok_button => 'Save' %>
+                      <% end %>
                   <% end %>
                 </td>
               <% end %>

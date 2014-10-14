@@ -48,15 +48,15 @@ module InlineHelper
   end
 
 
-  def self.generate_bip_params(issue, column)
+  def self.generate_bip_params(issue, column, new_object=false)
     issue_custom_field = column.custom_field
     custom_value = issue_custom_field.custom_values.find_by_customized_id(issue.id)
     if issue_custom_field.field_format == "list"
       {:type => :select, :collection => InlineHelper.get_custom_field_collection(issue_custom_field),
-          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :need_object_value => true, :type => :custom_field, :custom_field_id => column.custom_field.id), :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id)}
+          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id, :need_new_object => new_object )} #, :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id)}
     else
       {:type => :input,
-          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id), :inner_class => '', :ok_button => 'Save'}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
+          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id, :need_new_object => new_object ), :inner_class => '', :ok_button => 'Save'}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
     end
   end
 

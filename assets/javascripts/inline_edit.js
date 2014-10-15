@@ -81,4 +81,13 @@ BestInPlaceEditor.forms.date = {
 
 jQuery(function() {
     $.datepicker.setDefaults(datepickerOptions);
+
+
+    $('.issues tbody tr').on('mouseenter', function(e){
+        $('#' + $(this).attr('id') + '-subject').show();
+    });
+
+    $('.issues tbody tr').on('mouseleave', function(e){
+        $('#' + $(this).attr('id') + '-subject').hide();
+    })
 });

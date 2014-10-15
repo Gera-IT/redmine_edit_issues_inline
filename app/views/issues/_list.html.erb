@@ -61,8 +61,8 @@
                   <% elsif InlineHelper.define_type(column) == :input %>
                       <% if column.name == :subject %>
                         <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id), :date => {:value => issue.send(column.name)},
-                                          :activator => "#issue_#{issue.id}_subject" %>
-                        <%= image_tag 'pencil12.gif', :plugin => 'task_inline_edit', :style => 'float:right;', :id => "issue_#{issue.id}_subject" %>
+                                          :activator => "#issue-#{issue.id}-subject" %>
+                        <%= image_tag 'pencil12.gif', :plugin => 'task_inline_edit', :style => 'float:right; display:none;', :id => "issue-#{issue.id}-subject" %>
                       <% else %>
                         <%= best_in_place issue, column.name.to_sym, :type => :input, :path => issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => @project.id)%>
                       <% end %>

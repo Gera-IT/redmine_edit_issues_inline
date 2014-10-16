@@ -53,16 +53,31 @@ module InlineHelper
     custom_value = issue_custom_field.custom_values.find_by_customized_id(issue.id)
     if issue_custom_field.field_format == "list"
       {:type => :select, :collection => InlineHelper.get_custom_field_collection(issue_custom_field),
-          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id, :need_new_object => new_object )} #, :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id)}
+          :path => Rails.application.routes.url_helpers.issue_path(issue), :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id).try(:value)}}
     else
       {:type => :input,
-          :path => Rails.application.routes.url_helpers.issues_inline_update_inline_path(:issues_inline_id => issue.id, :project_id => issue.project.id, :type => :custom_field, :custom_field_id => column.custom_field.id, :need_new_object => new_object ), :inner_class => '', :ok_button => 'Save'}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
+          :path => Rails.application.routes.url_helpers.issue_path(issue), :inner_class => '', :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]"}}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
     end
   end
 
   def self.allowed_empty_fields(field)
     allowed_fields = ["IssueCategory", "Version"]
     allowed_fields.include? field
+  end
+
+  def self.replace_attributes_name(field_name)
+    values = {
+        :status => :status_id,
+        :priority => :priority_id,
+        :tracker => :tracker_id,
+        :assigned_to => :assigned_to_id,
+        :category => :category_id,
+        :fixed_version => :fixed_version_id,
+        :project => :project_id,
+        :author => :author_id
+    }
+
+    return values[field_name]
   end
 
 

@@ -50,13 +50,24 @@ module InlineHelper
 
   def self.generate_bip_params(issue, column, new_object=false)
     issue_custom_field = column.custom_field
+    attrs = issue.custom_field_values
+    attrs = issue.custom_values.each_with_object({}) do |o, h|
+      # possible_value = nil
+      # if o.custom_field.is_required                             #this needs to avoid validation failing on empty object
+      #   possible_value = o.custom_field.possible_values.first if o.custom_field.field_format == "list"
+      # end
+      possible_value = "" #unless possible_value
+
+      h[o.custom_field_id ] = o.value || possible_value
+    end
+    attrs.delete(issue_custom_field.id)
     custom_value = issue_custom_field.custom_values.find_by_customized_id(issue.id)
     if issue_custom_field.field_format == "list"
       {:type => :select, :collection => InlineHelper.get_custom_field_collection(issue_custom_field),
-          :path => Rails.application.routes.url_helpers.issue_path(issue), :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id).try(:value)}}
+          :path => Rails.application.routes.url_helpers.issues_inline_update_path(issue, :project_id => issue.project.id), :additional_attributes => attrs , :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values", :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id).try(:value)}}
     else
       {:type => :input,
-          :path => Rails.application.routes.url_helpers.issue_path(issue), :inner_class => '', :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]"}}#, :activator => "#issue_#{issue.id}_#{column.name.to_s}"
+          :path => Rails.application.routes.url_helpers.issues_inline_update_path(issue, :project_id => issue.project.id),  :additional_attributes => attrs, :inner_class => '', :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values"}}
     end
   end
 

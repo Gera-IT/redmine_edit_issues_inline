@@ -3,6 +3,6 @@
 
 
 resources :issues_inline do
-    put :update_inline
+    put :update
 end
 

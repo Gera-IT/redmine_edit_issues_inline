@@ -11,13 +11,13 @@ $(document).ready(function() {
 //        console.log(id);
 //        setTimeout($('#' + id).datepicker(), 2000);
 //    })
+
+    $('.best_in_place').bind("ajax:error", function(request, error){
+        alert("It seems like some fields that requires your attention were added after you last time updated this issue. " +
+            "You need to fill them before you can use this editor. These are errors:" + error.responseText);
+    });
 });
 
-$('.ui-datepicker-trigger').click(function (event) {
-    id = event.target.id;
-    console.log(id);
-    setTimeout($('#' + id).datepicker(), 2000);
-});
 
 jQuery(function(){
 //    $('.ui-datepicker-trigger').click(function (event) {

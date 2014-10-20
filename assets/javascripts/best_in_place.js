@@ -189,6 +189,8 @@ BestInPlaceEditor.prototype = {
         self.objectName = self.element.data("object") || self.objectName;
         self.simpleValue = self.element.data("simple-value");
         self.attributeName = self.element.data("attribute") || self.attributeName;
+        self.additionalAttributes = self.element.data("additional-attributes");
+        self.additionalAttributesName = self.element.data("additional-attributes-name");
         self.activator = self.element.data("activator") || self.element;
         self.okButton = self.element.data("ok-button") || self.okButton;
         self.okButtonClass = self.element.data("ok-button-class") || self.okButtonClass || BestInPlaceEditor.defaults.okButtonClass;
@@ -250,9 +252,20 @@ BestInPlaceEditor.prototype = {
         // To prevent xss attacks, a csrf token must be defined as a meta attribute
         var csrf_token = jQuery('meta[name=csrf-token]').attr('content'),
             csrf_param = jQuery('meta[name=csrf-param]').attr('content');
+        var additional_attributes = this.additionalAttributes;
+        console.log(additional_attributes);
+        var additional_attributes_name = this.additionalAttributesName;
+        var object_name = this.objectName;
 
         var data = "_method=" + BestInPlaceEditor.defaults.ajaxMethod;
         data += "&" + this.objectName + '[' + this.attributeName + ']=' + encodeURIComponent(this.getValue());
+
+        if (additional_attributes && additional_attributes_name) {
+            $.each(this.additionalAttributes, function (item) {
+                var value = additional_attributes[item] == "nil" ? "" : additional_attributes[item];
+                data += "&" + object_name + '[' + additional_attributes_name + '[' + item + ']]=' + value;
+            });
+        }
 
         if (csrf_param !== undefined && csrf_token !== undefined) {
             data += "&" + csrf_param + "=" + encodeURIComponent(csrf_token);
@@ -379,6 +392,7 @@ BestInPlaceEditor.forms = {
                 input_elt.addClass(this.inner_class);
             }
 
+
             output.append(input_elt);
             this.placeButtons(output, this);
 
@@ -457,6 +471,22 @@ BestInPlaceEditor.forms = {
                     .attr('class', this.inner_class !== null ? this.inner_class : ''),
                 currentCollectionValue = this.collectionValue;
 
+            var hidden_elements = this.additionalAttributes;
+            var hidden_fields = [];
+            var attr_name = this.additionalAttributesName;
+
+            if (hidden_elements)
+            {
+                 $.each(hidden_elements, function(key){
+                    var value = hidden_elements[key] == "nil" ? "" : hidden_elements[key];
+                    hidden_fields.push(jQuery(document.createElement('input'))
+                        .attr('type', 'hidden')
+                        .attr('name', attr_name + "[" + key + "]")
+                        .val(value));
+                });
+            }
+
+
             jQuery.each(this.values, function (key, value) {
                 var option_elt = jQuery(document.createElement('option'))
                     .val(key)
@@ -467,6 +497,10 @@ BestInPlaceEditor.forms = {
                 select_elt.append(option_elt);
             });
             output.append(select_elt);
+
+            $.each(hidden_fields, function(item){
+              output.append(hidden_fields[item])  ;
+            });
 
             this.element.html(output);
             this.setHtmlAttributes();

@@ -52,10 +52,10 @@ module InlineHelper
     issue_custom_field = column.custom_field
     attrs = issue.custom_field_values
     attrs = issue.custom_values.each_with_object({}) do |o, h|
-      # possible_value = nil
-      # if o.custom_field.is_required                             #this needs to avoid validation failing on empty object
-      #   possible_value = o.custom_field.possible_values.first if o.custom_field.field_format == "list"
-      # end
+      possible_value = nil
+      if o.custom_field.is_required && o.custom_field.field_format == "list"                         #this needs to avoid validation failing on empty object
+        possible_value = o.custom_field.possible_values.first
+      end
       possible_value = "" #unless possible_value
 
       h[o.custom_field_id ] = o.value || possible_value

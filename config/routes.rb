@@ -3,6 +3,9 @@
 
 
 resources :issues_inline, only: [:index] do
+  member do
     put :update
+  end
+
 end
 

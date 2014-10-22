@@ -130,7 +130,7 @@ class IssuesInlineController < ApplicationController
   end
 
   def get_issue
-    @issue = Issue.find_by_id(params[:issues_inline_id])
+    @issue = Issue.find_by_id(params[:id])
     raise Unauthorized unless @issue.visible?
     @project = @issue.project
   rescue ActiveRecord::RecordNotFound

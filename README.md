@@ -1,8 +1,8 @@
-= task_inline_edit
+# task_inline_edit
 
 Plugin for inline edits of issues on issue index page. Allows you to edit any built in fields, as well as any custom one, provided by redmine.
 
-== How to install
+## How to install
 
 cd redmine/plugins
 

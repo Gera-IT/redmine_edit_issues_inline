@@ -64,10 +64,10 @@ module InlineHelper
     custom_value = issue_custom_field.custom_values.find_by_customized_id(issue.id)
     if issue_custom_field.field_format == "list"
       {:type => :select, :collection => InlineHelper.get_custom_field_collection(issue_custom_field),
-          :path => Rails.application.routes.url_helpers.issues_inline_path(issue, :project_id => issue.project.id), :additional_attributes => attrs , :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values", :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id).try(:value)}}
+          :path => Rails.application.routes.url_helpers.issues_inline_path(issue, :project_id => issue.project.id), :additional_attributes => attrs , :data => {:id => issue.id, :user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values", :simple_value => issue_custom_field.custom_values.find_by_customized_id(issue.id).try(:value)}}
     else
       {:type => :input,
-          :path => Rails.application.routes.url_helpers.issues_inline_path(issue, :project_id => issue.project.id),  :additional_attributes => attrs, :inner_class => '', :data => {:user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values"}}
+          :path => Rails.application.routes.url_helpers.issues_inline_path(issue, :project_id => issue.project.id),  :additional_attributes => attrs, :inner_class => '', :data => {:id => issue.id, :user_object => "issue", :user_attribute => "custom_field_values[#{column.custom_field.id}]", :additional_attributes_name => "custom_field_values"}}
     end
   end
 

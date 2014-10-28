@@ -5,26 +5,31 @@
 
 $(document).ready(function() {
     jQuery(".best_in_place").best_in_place();
-
-//    $('.ui-datepicker-trigger').click(function (event) {
-//        id = event.target.id;
-//        console.log(id);
-//        setTimeout($('#' + id).datepicker(), 2000);
-//    })
-
     $('.best_in_place').bind("ajax:error", function(request, error){
-        alert("It seems like some fields that requires your attention were added after you last time updated this issue. " +
-            "You need to fill them before you can use this editor. These are errors:" + error.responseText);
+        console.log(error);
+        console.log(request);
+        var result;
+        if (error.status == 422)
+            {
+                var result = confirm("It seems like some fields that requires your attention were added after you last time updated this issue. " +
+                    "You need to fill them before you can use this editor. These are errors:" + error.responseText);
+            }
+        else
+            {
+                var result = ("Seems like you've found an error. Please report to redmine administrator about this and it will get fixed")
+            }
+        if (result) {
+            window.location = "/issues/" + request.target.dataset.id
+        }
+        else
+        {
+
+        }
     });
 });
 
 
 jQuery(function(){
-//    $('.ui-datepicker-trigger').click(function (event) {
-//        id = event.target.id;
-//        console.log(id);
-//        setTimeout($('#' + id).datepicker(), 2000);
-//    });
     jQuery(".has_datepicker").datepicker();
 });
 

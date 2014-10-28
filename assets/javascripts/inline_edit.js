@@ -12,11 +12,11 @@ $(document).ready(function() {
         if (error.status == 422)
             {
                 var result = confirm("It seems like some fields that requires your attention were added after you last time updated this issue. " +
-                    "You need to fill them before you can use this editor. These are errors:" + error.responseText);
+                    "You need to fill them before you can use this editor. These are errors:" + error.responseText + '. Clicking ok will redirect you to issue page');
             }
         else
             {
-                var result = ("Seems like you've found an error. Please report to redmine administrator about this and it will get fixed")
+                var result = ("Seems like you've found an error. Please report to redmine administrator about this and it will get fixed. Clicking ok will redirect you to issue page")
             }
         if (result) {
             window.location = "/issues/" + request.target.dataset.id

@@ -7,7 +7,7 @@ require_dependency 'issue_patch'
 
 # require_dependency 'inline_helper'
 
-Redmine::Plugin.register :task_inline_edit do
+Redmine::Plugin.register :redmine_edit_issues_inline do
   name 'Task Inline Edit plugin'
   author 'Alex Sinelnikov'
   description 'Inline edit for fields on tasks list'

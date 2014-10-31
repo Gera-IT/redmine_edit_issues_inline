@@ -29,6 +29,8 @@ module InlineHelper
       collection = self.get_project_users(project_id)
     elsif model == "Version"
       collection = Project.find(project_id).versions
+    elsif model == "IssueCategory"
+      collection = Project.find(project_id).issue_categories
     else
       collection = model.constantize.all
     end
@@ -72,7 +74,7 @@ module InlineHelper
   end
 
   def self.allowed_empty_fields(field)
-    allowed_fields = ["IssueCategory", "Version"]
+    allowed_fields = ["IssueCategory", "Version", "Member"]
     allowed_fields.include? field
   end
 

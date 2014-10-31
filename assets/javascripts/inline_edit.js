@@ -26,11 +26,27 @@ $(document).ready(function() {
 
         }
     });
+
+    $('.subject_link').click(function(e){
+        if ($(this).children().length > 0)
+        {
+            e.preventDefault();
+        }
+    })
 });
+
+
 
 
 jQuery(function(){
     jQuery(".has_datepicker").datepicker();
+    $('.subject_link').click(function(e){
+        if ($(this).children.length == 0)
+        {
+            alert("length 0");
+            e.preventDefault();
+        }
+    })
 });
 
 

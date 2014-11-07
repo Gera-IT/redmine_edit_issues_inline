@@ -29,12 +29,17 @@ $(document).ready(function() {
 
     $('.subject_link').click(function(e){
 
-        if ($(this).children().first().hasClass("update_issue_change_label") || $(this).children().first().hasClass("new_issue_change_label") )
-        {}
-        else if  ($(this).children().length > 0)
+        if ($(this).find('form.form_in_place').length != 0)
         {
             e.preventDefault();
         }
+
+//        if ($(this).children().first().hasClass("update_issue_change_label") || $(this).children().first().hasClass("new_issue_change_label") )
+//        {}
+//        else if  ($(this).children().length > 0)
+//        {
+//            e.preventDefault();
+//        }
     })
 });
 

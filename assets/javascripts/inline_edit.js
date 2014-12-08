@@ -102,7 +102,11 @@ BestInPlaceEditor.forms.date = {
 }
 
 jQuery(function() {
-    $.datepicker.setDefaults(datepickerOptions);
+    if (typeof datepickerOptions != 'undefined')
+    {
+        $.datepicker.setDefaults(datepickerOptions);
+    }
+
 
 
     $('.issues tbody tr').on('mouseenter', function(e){

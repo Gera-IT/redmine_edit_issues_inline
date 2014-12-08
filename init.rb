@@ -3,9 +3,6 @@ require 'redmine'
 
 require_dependency 'issue_patch'
 
-# require_dependency 'issues_inline_helper'
-
-# require_dependency 'inline_helper'
 
 Redmine::Plugin.register :redmine_edit_issues_inline do
   name 'Redmine inline issues edit plugin'
@@ -24,5 +21,12 @@ Redmine::Plugin.register :redmine_edit_issues_inline do
 
 end
 
+
+class FilesHook < Redmine::Hook::ViewListener
+  def view_layouts_base_html_head(context = { })
+    javascript_include_tag('best_in_place.js', :plugin => 'redmine_edit_issues_inline') +
+        javascript_include_tag('inline_edit.js', :plugin => 'redmine_edit_issues_inline')
+  end
+end
 
 

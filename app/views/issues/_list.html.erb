@@ -1,3 +1,4 @@
+<% issues_list = {} %>
 <%= form_tag({}) do -%>
     <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
     <div class="autoscroll">
@@ -15,11 +16,20 @@
         </tr>
         </thead>
         <% previous_group = false %>
+
+        <% group_counter = 0 %>
         <tbody>
         <% issue_list(issues) do |issue, level| -%>
+            <% if issues_list[column_content(@query.group_by_column, issue)].kind_of?(Array) %>
+                <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+            <% else %>
+                <% issues_list[column_content(@query.group_by_column, issue)]  = [] %>
+                <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+            <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
                 <% reset_cycle %>
-                <tr class="group open">
+                <tr class="group open group-number-<%= group_counter%>" data-group-name="<%= column_content(@query.group_by_column, issue)%>">
+                  <% group_counter = group_counter +1 %>
                   <td colspan="<%= query.inline_columns.size + 2 %>">
                     <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                     <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= @issue_count_by_group[group] %></span>
@@ -28,7 +38,10 @@
                   </td>
                 </tr>
                 <% previous_group = group %>
+             <% else %>
+
             <% end %>
+
             <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
               <% query.inline_columns.each do |column| %>
@@ -75,7 +88,18 @@
         <% end -%>
         </tbody>
       </table>
+
     </div>
 <% end -%>
+<p style="color:red; float:right;">Page: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@issues)%> <%= %></p>
+<div class="clearfix" style="clear:both"></div>
 
 <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+
+
+<script>
+  <% issues_list.each do |k, v| %>
+    var group_counter = 0;
+    $('[data-group-name="<%= k %>"] td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%> <%= %></p>')
+  <% end %>
+</script>

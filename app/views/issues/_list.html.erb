@@ -100,7 +100,7 @@
 
 
 <script>
-  $('#query_form_with_buttons .buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@query.issues)%> <%= %></p>');
+  $('#query_form_with_buttons').find('p.buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@query.issues)%> <%= %></p>');
 
   <% if @query.grouped? %>
       <% issues_list.each do |k, v| %>

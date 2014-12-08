@@ -102,8 +102,10 @@
 <script>
   $('#query_form_with_buttons .buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@query.issues)%> <%= %></p>');
 
-  <% issues_list.each do |k, v| %>
-    var group_counter = 0;
-    $('[data-group-name="<%= k %>"] td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%> <%= %></p>')
+  <% if @query.grouped? %>
+      <% issues_list.each do |k, v| %>
+        var group_counter = 0;
+        $('[data-group-name="<%= k %>"] td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%> <%= %></p>')
+      <% end %>
   <% end %>
 </script>

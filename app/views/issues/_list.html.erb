@@ -20,11 +20,13 @@
         <% group_counter = 0 %>
         <tbody>
         <% issue_list(issues) do |issue, level| -%>
-            <% if issues_list[column_content(@query.group_by_column, issue)].kind_of?(Array) %>
-                <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
-            <% else %>
-                <% issues_list[column_content(@query.group_by_column, issue)]  = [] %>
-                <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+            <% if @query.grouped? %>
+               <% if issues_list[column_content(@query.group_by_column, issue)].kind_of?(Array) %>
+                 <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+               <% else %>
+                 <% issues_list[column_content(@query.group_by_column, issue)]  = [] %>
+                 <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+               <% end %>
             <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
                 <% reset_cycle %>

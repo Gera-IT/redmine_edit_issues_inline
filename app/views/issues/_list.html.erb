@@ -16,22 +16,22 @@
         </tr>
         </thead>
         <% previous_group = false %>
-
-        <% group_counter = 0 %>
         <tbody>
+        <% group_counter = 0 %>
         <% issue_list(issues) do |issue, level| -%>
-            <% if @query.grouped? %>
-               <% if issues_list[column_content(@query.group_by_column, issue)].kind_of?(Array) %>
-                 <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+            <% if @query.grouped? && previous_group != false %>
+               <% if issues_list[group_counter].kind_of?(Array) %>
+                 <% issues_list[group_counter] << issue %>
                <% else %>
-                 <% issues_list[column_content(@query.group_by_column, issue)]  = [] %>
-                 <% issues_list[column_content(@query.group_by_column, issue)] << issue %>
+                 <% issues_list[group_counter]  = [] %>
+                 <% issues_list[group_counter] << issue %>
                <% end %>
             <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
+                <% p group.class %>
+                <% p group %>
                 <% reset_cycle %>
-                <tr class="group open group-number-<%= group_counter%>" data-group-name="<%= column_content(@query.group_by_column, issue)%>">
-                  <% group_counter = group_counter +1 %>
+                <tr class="group open" id="group-<%= group_counter%>">
                   <td colspan="<%= query.inline_columns.size + 2 %>">
                     <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                     <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= @issue_count_by_group[group] %></span>
@@ -40,6 +40,7 @@
                   </td>
                 </tr>
                 <% previous_group = group %>
+                <% group_counter = group_counter + 1 %>
              <% else %>
 
             <% end %>
@@ -100,12 +101,13 @@
 
 
 <script>
-  $('#query_form_with_buttons').find('p.buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@query.issues)%> <%= %></p>');
+  $('#query_form_with_buttons').find('p.buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).count%><%= InlineHelper.page_issues_status(@query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]))%> </p>');
 
   <% if @query.grouped? %>
+      var group = 0;
       <% issues_list.each do |k, v| %>
-        var group_counter = 0;
-        $('[data-group-name="<%= k %>"] td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%> <%= %></p>')
+        $('#group-' + group).find('td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%></p>');
+        group = group + 1;
       <% end %>
   <% end %>
 </script>

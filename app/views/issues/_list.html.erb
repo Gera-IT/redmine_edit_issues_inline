@@ -19,7 +19,7 @@
         <tbody>
         <% group_counter = 0 %>
         <% issue_list(issues) do |issue, level| -%>
-            <% if @query.grouped? && previous_group != false %>
+            <% if @query.grouped? && group_counter != 0 %>
                <% if issues_list[group_counter].kind_of?(Array) %>
                  <% issues_list[group_counter] << issue %>
                <% else %>
@@ -28,8 +28,6 @@
                <% end %>
             <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
-                <% p group.class %>
-                <% p group %>
                 <% reset_cycle %>
                 <tr class="group open" id="group-<%= group_counter%>">
                   <td colspan="<%= query.inline_columns.size + 2 %>">

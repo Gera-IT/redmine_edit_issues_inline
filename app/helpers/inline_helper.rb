@@ -27,19 +27,13 @@ module InlineHelper
     issues_total_time = issues_total_time.inject(:+)
     issues_total_time = 0 unless issues_total_time
 
-    closed_issues_time = issues.select {|i| i.status.name == "Closed"}.map(&:estimated_hours).map(&:to_f)
+    closed_issues_time = issues.select {|i| i.status.is_closed }.map(&:estimated_hours).map(&:to_f)
     closed_issues_time = closed_issues_time.inject(:+)
     closed_issues_time = 0 unless closed_issues_time
-
     opened_issues_time = issues_total_time - closed_issues_time
-
-    status = {:opened => 0, :opened_hours => 0, :closed => 0, :closed_hours => 0}
-    status[:opened] = issues.map(&:status).map(&:name).count("New")
-
-    status[:opened] = status[:opened] + issues.map(&:status).map(&:name).count("Assigned")
-
-    status[:opened] = status[:opened] + issues.map(&:status).map(&:name).count("Reopened")
-    status[:closed] = issues.map(&:status).map(&:name).count("Closed")
+    status = {:opened => 0, :closed => 0}
+    status[:opened] = issues.select{|i| !i.status.is_closed}.count
+    status[:closed] = issues.select{|i| i.status.is_closed}.count
     return "(#{status[:opened]} open/ #{status[:closed]} closed); ETA-#{issues_total_time}h(#{opened_issues_time}h open/#{closed_issues_time}h closed)"
   end
 

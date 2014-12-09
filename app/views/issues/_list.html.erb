@@ -16,20 +16,18 @@
         </tr>
         </thead>
         <% previous_group = false %>
-        <tbody>
         <% group_counter = 0 %>
+        <tbody>
         <% issue_list(issues) do |issue, level| -%>
-            <% if @query.grouped? && group_counter != 0 %>
-               <% if issues_list[group_counter].kind_of?(Array) %>
-                 <% issues_list[group_counter] << issue %>
-               <% else %>
-                 <% issues_list[group_counter]  = [] %>
-                 <% issues_list[group_counter] << issue %>
-               <% end %>
+            <% if @query.grouped? %>
+                <% issues_list[strip_tags(column_content(@query.group_by_column, issue)).split(" ").join("_")]  ||= [] %>
+                <% issues_list[strip_tags(column_content(@query.group_by_column, issue)).split(" ").join("_")] << issue %>
             <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
                 <% reset_cycle %>
-                <tr class="group open" id="group-<%= group_counter%>">
+                <% 'group name' %>
+                <% p column_content(@query.group_by_column, issue) %>
+                <tr class="group open" id="group-<%= strip_tags(column_content(@query.group_by_column, issue)).split(" ").join("_")%>">
                   <td colspan="<%= query.inline_columns.size + 2 %>">
                     <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
                     <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= @issue_count_by_group[group] %></span>
@@ -39,7 +37,6 @@
                 </tr>
                 <% previous_group = group %>
                 <% group_counter = group_counter + 1 %>
-             <% else %>
 
             <% end %>
 
@@ -104,7 +101,7 @@
   <% if @query.grouped? %>
       var group = 0;
       <% issues_list.each do |k, v| %>
-        $('#group-' + group).find('td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%></p>');
+        $('#group-<%= k %>').find('td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%></p>');
         group = group + 1;
       <% end %>
   <% end %>

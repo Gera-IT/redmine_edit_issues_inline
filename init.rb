@@ -12,6 +12,8 @@ Redmine::Plugin.register :redmine_edit_issues_inline do
   url 'https://github.com/avdept/redmine_edit_issues_inline'
   author_url 'https://github.com/avdept'
 
+  settings :default => {'inline_issues_information' => '1'}, :partial => 'settings/inline_information'
+
   project_module :inline_edit do
     permission :allow_inline_edit, :issues_inline => :update_inline
   end

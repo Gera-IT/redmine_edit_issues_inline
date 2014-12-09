@@ -89,12 +89,15 @@
 
     </div>
 <% end -%>
+<% if Setting.plugin_redmine_edit_issues_inline["inline_issues_information"] == '1' %>
 <p style="color:red; float:right;">Page: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@issues)%> <%= %></p>
+<% end %>
 <div class="clearfix" style="clear:both"></div>
 
 <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
 
 
+<% if Setting.plugin_redmine_edit_issues_inline["inline_issues_information"] == '1' %>
 <script>
   $('#query_form_with_buttons').find('p.buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).count%><%= InlineHelper.page_issues_status(@query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]))%> </p>');
 
@@ -106,3 +109,5 @@
       <% end %>
   <% end %>
 </script>
+
+<% end %>

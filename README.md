@@ -6,7 +6,7 @@ Plugin for inline edits of issues on issue index page. Allows you to edit any bu
 
 cd redmine/plugins
 
-Run `git clone https://github.com/Gera-IT/redmine_edit_issues_inline.git`
+Run `https://github.com/avdept/redmine_edit_issues_inline.git`
 
 Run `bundle install`
 

@@ -2,4 +2,10 @@
   <%= content_tag(:label, "Enable show of grouping info(total, time, etc)") %>
     <%= check_box_tag "settings[inline_issues_information]", '1', Setting.plugin_redmine_edit_issues_inline["inline_issues_information"] %>
 
+
 </P>
+
+<p>
+  <%= content_tag(:label, "Enable inline field edit") %>
+  <%= check_box_tag "settings[enable_inline_edit]", '1', Setting.plugin_redmine_edit_issues_inline["enable_inline_edit"] %>
+</p>

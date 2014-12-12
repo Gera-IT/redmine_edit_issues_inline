@@ -13,3 +13,5 @@ Run `bundle install`
 Run `rake redmine:plugins:assets`
 
 Restart redmine server
+
+Go to admininstration side -> plugins -> settings to this plugin and make sure you've enabled inline edit

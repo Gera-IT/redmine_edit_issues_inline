@@ -4,7 +4,10 @@
 
 
 $(document).ready(function() {
+
+
     jQuery(".best_in_place").best_in_place();
+
     $('.best_in_place').bind("ajax:error", function(request, error){
         console.log(error);
         console.log(request);
@@ -42,9 +45,8 @@ $(document).ready(function() {
 jQuery(function(){
     jQuery(".has_datepicker").datepicker();
     $('.subject_link').click(function(e){
-        if ($(this).children.length == 0)
+        if ($(this).children.length != 0)
         {
-            alert("length 0");
             e.preventDefault();
         }
     })
@@ -99,13 +101,23 @@ BestInPlaceEditor.forms.date = {
             event.data.editor.abort();
         }
     }
-}
+};
 
 jQuery(function() {
+
+
     if (typeof datepickerOptions != 'undefined')
     {
         $.datepicker.setDefaults(datepickerOptions);
     }
+    $('.ui-datepicker-trigger').click(function(){
+        setTimeout(function(){
+            $('.date_field').datepicker(datepickerOptions);
+            $('.date_field').datepicker('show');
+        }, 250);
+
+    });
+
 
 
 

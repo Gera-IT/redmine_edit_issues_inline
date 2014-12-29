@@ -17,7 +17,7 @@
         <%= best_in_place CustomValue.new, :value, InlineHelper.generate_bip_params(issue, column, true) %>
     <% end %>
 <% elsif [:due_date, :start_date].include?(column.name) %>
-    <%= best_in_place issue, column.name.to_sym, :type => :date,
+    <%= best_in_place issue, column.name.to_sym,
                       :path => issues_inline_path(issue, :project_id => proj.id), :inner_class => 'date_field', :activator => "#issue_#{issue.id}_#{column.name.to_s}", :data => {:id => issue.id}%>
     <%= image_tag 'calendar.png', :plugin => 'redmine_edit_issues_inline', :class => 'ui-datepicker-trigger', :id => "issue_#{issue.id}_#{column.name.to_s}" %>
 <% elsif InlineHelper.define_type(column) == :input %>

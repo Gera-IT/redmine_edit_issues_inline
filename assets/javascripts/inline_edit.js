@@ -110,13 +110,21 @@ jQuery(function() {
     {
         $.datepicker.setDefaults(datepickerOptions);
     }
-    $('.ui-datepicker-trigger').click(function(){
-        setTimeout(function(){
-            $('.date_field').datepicker(datepickerOptions);
-            $('.date_field').datepicker('show');
-        }, 250);
 
-    });
+    //$(document).on('click',".dp-trigger", function(){
+    //    $('.date_field').datepicker('show');
+    //});
+
+    //$('.dp-trigger').click(function(){
+    //    var trigger = $(this);
+    //    setTimeout(function(){
+    //        //$('.date_field').datepicker(datepickerOptions);
+    //        trigger.parent().find('.date_field').datepicker(datepickerOptions);
+    //        trigger.parent().find('.date_field').datepicker('show');
+    //        //$('.date_field').datepicker('show');
+    //    }, 250);
+    //
+    //});
 
 
 

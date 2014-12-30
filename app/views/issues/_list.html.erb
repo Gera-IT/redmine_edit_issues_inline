@@ -95,7 +95,7 @@
     </div>
 <% end -%>
 <% if Setting.plugin_redmine_edit_issues_inline["inline_issues_information"] == '1' %>
-<p style="color:red; float:right;">Page: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@issues)%> <%= %></p>
+<p style="color: #005782; display: inline; font-weight: bold; float: right; margin: 0px; font-size: 0.9em;">Page: tasks - <%= @issues.count%><%= InlineHelper.page_issues_status(@issues)%> <%= %></p>
 <% end %>
 <div class="clearfix" style="clear:both"></div>
 
@@ -104,12 +104,12 @@
 
 <% if Setting.plugin_redmine_edit_issues_inline["inline_issues_information"] == '1' %>
 <script>
-  $('#query_form_with_buttons').find('p.buttons').append('<p style="color:red; margin-left: 46%; display: inline;">Query: tasks - <%= @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).count%><%= InlineHelper.page_issues_status(@query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]))%> </p>');
+  $('#query_form_with_buttons').find('p.buttons').append('<p style="color: #005782; display: inline; font-weight: bold; float: right; margin: 0px; font-size: 0.9em;">Query: tasks - <%= @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]).count%><%= InlineHelper.page_issues_status(@query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version]))%> </p>');
 
   <% if @query.grouped? %>
       var group = 0;
       <% issues_list.each do |k, v| %>
-        $('#group-<%= k %>').find('td').append('<p style="color:red; float:right;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%></p>');
+        $('#group-<%= k %>').find('td').append('<p style="color: #005782; display: inline; font-weight: bold; float: right; margin: 0px; font-size: 0.9em;">Grouped: tasks - <%= v.count%><%= InlineHelper.page_issues_status(v)%></p>');
         group = group + 1;
       <% end %>
   <% end %>

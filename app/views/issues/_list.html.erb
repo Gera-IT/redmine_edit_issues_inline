@@ -42,7 +42,7 @@
 
             <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
-              <% if Setting.plugin_redmine_edit_issues_inline["enable_inline_edit"] == '1' %>
+              <% if Setting.plugin_redmine_edit_issues_inline["enable_inline_edit"] == '1' && @project.enabled_modules.map(&:name).include?("inline_edit")%>
                 <% query.inline_columns.each do |column| %>
 
                     <td class="<%= column.css_classes%>">

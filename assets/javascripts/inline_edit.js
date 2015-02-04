@@ -45,7 +45,7 @@ $(document).ready(function() {
 jQuery(function(){
     jQuery(".has_datepicker").datepicker();
     $('.subject_link').click(function(e){
-        if ($(this).children.length != 0)
+        if (e.target.children.length != 0)
         {
             e.preventDefault();
         }

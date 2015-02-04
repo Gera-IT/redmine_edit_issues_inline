@@ -108,11 +108,9 @@ BestInPlaceEditor.prototype = {
             "data": editor.requestData(),
             "success": function (data) {
                 editor.loadSuccessCallback(data);
-                console.log(editor.requestData());
             },
             "error": function (request, error) {
                 editor.loadErrorCallback(request, error);
-                console.log(editor.requestData());
             }
         });
 
@@ -253,7 +251,6 @@ BestInPlaceEditor.prototype = {
         var csrf_token = jQuery('meta[name=csrf-token]').attr('content'),
             csrf_param = jQuery('meta[name=csrf-param]').attr('content');
         var additional_attributes = this.additionalAttributes;
-        console.log(additional_attributes);
         var additional_attributes_name = this.additionalAttributesName;
         var object_name = this.objectName;
 

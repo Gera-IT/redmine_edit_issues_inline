@@ -45,6 +45,17 @@ $(document).ready(function() {
 jQuery(function(){
     jQuery(".has_datepicker").datepicker();
     $('.subject_link').click(function(e){
+        if ($(e.target + 'span.new_issue_change_label'))
+        {
+            return true
+        }
+
+        if ($(e.target + 'span.update_issue_change_label'))
+        {
+            return true
+        }
+
+
         if (e.target.children.length != 0)
         {
             e.preventDefault();

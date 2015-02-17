@@ -1,4 +1,3 @@
-require 'assets_hook'
 require 'redmine'
 
 require_dependency 'issue_patch'
@@ -25,11 +24,9 @@ Redmine::Plugin.register :redmine_edit_issues_inline do
 end
 
 
-class FilesHook < Redmine::Hook::ViewListener
-  def view_layouts_base_html_head(context = { })
-    javascript_include_tag('best_in_place.js', :plugin => 'redmine_edit_issues_inline') +
-        javascript_include_tag('inline_edit.js', :plugin => 'redmine_edit_issues_inline')
-  end
+class JSCSSFilesHook < Redmine::Hook::ViewListener
+
+    render_on :view_layouts_base_html_head, :partial => 'shared/js_includes'
 end
 
 

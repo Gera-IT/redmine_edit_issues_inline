@@ -25,8 +25,6 @@
             <% end %>
             <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
                 <% reset_cycle %>
-                <% 'group name' %>
-                <% p column_content(@query.group_by_column, issue) %>
                 <tr class="group open" id="group-<%= strip_tags(column_content(@query.group_by_column, issue)).split(" ").join("_")%>">
                   <td colspan="<%= query.inline_columns.size + 2 %>">
                     <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
@@ -42,7 +40,7 @@
 
             <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
               <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false, :id => nil) %></td>
-              <% if Setting.plugin_redmine_edit_issues_inline["enable_inline_edit"] == '1' && @project.enabled_modules.map(&:name).include?("inline_edit")%>
+              <% if params[:project_id] && Setting.plugin_redmine_edit_issues_inline["enable_inline_edit"] == '1' && @project.enabled_modules.map(&:name).include?("inline_edit")%>
                 <% query.inline_columns.each do |column| %>
 
                     <td class="<%= column.css_classes%>">

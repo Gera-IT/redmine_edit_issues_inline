@@ -47,7 +47,7 @@ module InlineHelper
     elsif model == "IssueCategory"
       collection = Project.find(project_id).issue_categories
     elsif model == "IssueStatus"
-      collection = model.order("position ASC").all
+      collection = IssueStatus.order("position ASC").all
     else
       collection = model.constantize.all
     end

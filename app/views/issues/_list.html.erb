@@ -46,7 +46,7 @@
                     <td class="<%= column.css_classes%>">
                       <% proj = issue.project  %>
                       <% if InlineHelper.define_type(column) == :uneditable_field %>
-                          <%= column_content(column, issue) %>
+                          <%= column_content(column, issue).html_safe %>
                       <% elsif InlineHelper.define_type(column) == :select %>
                         <%= best_in_place issue, InlineHelper.replace_attributes_name(column.name), :type => :select, :collection => InlineHelper.get_collection(column.name, proj.id),
                                           :path => issues_inline_path(issue, :project_id => proj.id), :data => {:simple_value => issue.send(column.name).try(:name), :id => issue.id}

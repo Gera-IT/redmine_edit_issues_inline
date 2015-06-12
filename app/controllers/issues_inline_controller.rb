@@ -3,50 +3,11 @@ class IssuesInlineController < ApplicationController
   before_filter :find_project_by_project_id
   before_filter :get_issue, :only => [:update]
 
-
-
-  # def update_inline
-  #
-  #   @respond_object = Issue.find_by_id(params[:issues_inline_id])
-  #
-  #
-  #   if params[:need_object_value]
-  #     model = InlineHelper.model_for_replace(params[:issue].keys.first.to_sym)
-  #     if model == "Member"
-  #       @respond_object.update_attributes!(:assigned_to => @respond_object.project.users.find(params[:issue].values.first.to_i))
-  #     else
-  #       object = eval(model).find_by_id(params[:issue].values.first.to_i)
-  #       success = @respond_object.update_attribute(params[:issue].keys.first.to_sym, object)
-  #
-  #     end
-  #   else
-  #     if params[:type] == "custom_field"
-  #       @respond_object = CustomField.find(params[:custom_field_id].to_i).custom_values.find_or_initialize_by_customized_id(params[:issues_inline_id].to_i)
-  #       @respond_object.send("#{params[:custom_value].keys.first}=", params[:custom_value].values.first.to_s)
-  #       success = @respond_object.save
-  #     else
-  #       success = @respond_object.update_attributes(params[:issue])
-  #     end
-  #
-  #   end
-  #
-  #
-  #   respond_to do |format|
-  #     if success
-  #       p "Issue was updated"
-  #       format.html { redirect_to(@respond_object, :notice => 'Issue was successfully updated.') }
-  #       format.json { respond_with_bip(@respond_object) }
-  #     else
-  #       p 'Failure, issue wasnt updated'
-  #       format.html { render :action => "edit" }
-  #       format.json { respond_with_bip(@respond_object) }
-  #     end
-  #   end
-  #
-  # end
-
-
   def update
+    new_params = clean_params(params)
+    p new_params
+    params = new_params
+    p params
     return unless update_issue_from_params
     @issue.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     saved = false
@@ -80,6 +41,14 @@ class IssuesInlineController < ApplicationController
 
   private
 
+  def clean_params(params)
+    return unless params[:issue]
+    params[:issue].each do |k, v|
+      params[:issue][k.to_sym] = v.tr("V", "").tr("S","")
+    end
+    params
+  end
+
   def save_issue_with_child_records
     Issue.transaction do
       if params[:time_entry] && (params[:time_entry][:hours].present? || params[:time_entry][:comments].present?) && User.current.allowed_to?(:log_time, @issue.project)
@@ -96,8 +65,6 @@ class IssuesInlineController < ApplicationController
       if @issue.save
         call_hook(:controller_issues_edit_after_save, { :params => params, :issue => @issue, :time_entry => time_entry, :journal => @issue.current_journal})
       else
-        p "ERRORS"
-        p @issue.errors
         raise ActiveRecord::Rollback
       end
     end

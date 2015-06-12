@@ -21,6 +21,9 @@
  */
 //= require jquery.autosize
 
+
+var data_col
+
 function BestInPlaceEditor(e) {
     'use strict';
     this.element = e;
@@ -206,7 +209,9 @@ BestInPlaceEditor.prototype = {
 
 
         if (self.formType === "select" || self.formType === "checkbox") {
+            console.log(self.collection)
             self.values = self.collection;
+            data_col = self.values
             self.collectionValue = self.element.data("value") || self.collectionValue;
         }
     },
@@ -670,6 +675,3 @@ jQuery.fn.best_in_place = function () {
 
     return this;
 };
-
-
-
